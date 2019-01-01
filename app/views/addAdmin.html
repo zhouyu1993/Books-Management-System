@@ -1,0 +1,43 @@
+<h1 class="page-header">添加人员</h1>
+<div class="row">
+    <form class="form-horizontal" role="form" name="adminForm" ng-submit="addAdmin(adminForm.$valid,$event)">
+        <div class="form-group">
+            <label class="col-md-2 control-label">
+                账号：
+            </label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" placeholder="请输入账号……" ng-model="uName" id="uName" name="uName" required autofocus="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">
+                密码：
+            </label>
+            <div class="col-md-5">
+                <input type="password" class="form-control" placeholder="请输入密码……" ng-model="psw" id="psw" name="psw" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">
+                确认密码：
+            </label>
+            <div class="col-md-5">
+                <input type="password" class="form-control" placeholder="请确认密码……" ng-model="pswAgain" id="pswAgain" name="pswAgain" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">
+                权限：
+            </label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" placeholder="请设置人员权限。1系统管理员，2图书管理员，3读者" ng-model="uType" id="uType" name="uType" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-5">
+                <input class="btn btn-primary" type="submit" value="确定">
+                <input class="btn btn-default" type="reset">
+            </div>
+        </div>
+    </form>
+</div>
