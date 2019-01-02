@@ -7,7 +7,7 @@ var query = connection.query;
 insert       Book           信息
 delete       Book.id        信息
 modify       Book           信息
-selectAll    无             [Book]     
+selectAll    无             [Book]
 selectOne    Book.id        Book
  */
 
@@ -15,7 +15,6 @@ selectOne    Book.id        Book
 //将t_book等表格独立出来变成参数传入，然后将传入的对象也封装起来
 //这样的话增删查改变成公共接口
 var insert = function(book, callback) {
-    console.log("book:" + book);
     var sql = "insert into t_book set ?";
     var obj = {
         Book_name:      book.bookName   || '',
@@ -28,9 +27,8 @@ var insert = function(book, callback) {
         Current_num:    book.currentNum || 0,
         Buy_date:       book.buyDate    || new Date(),
         Brief:          book.brief      || '',
-        imageName:      book.imageName  || ''
     };
-    console.log(obj);
+
     try {
         //执行插入语句，成功返回success
         queryWithArgs(sql, obj, function(err, rows) {
@@ -71,7 +69,6 @@ exports.deleteOne = deleteOne;
 
 var modify = function(book, callback) {
     var sql = "UPDATE t_book SET ? WHERE Book_num = " + book.id;
-    console.log("sql:"+sql);
 
     var obj = {
         Book_num:       book.id,
@@ -85,11 +82,7 @@ var modify = function(book, callback) {
         Current_num:    book.currentNum || 0,
         Buy_date:       book.buyDate    || new Date(),
         Brief:          book.brief      || '',
-        imageName:      book.imageName  || ''
     };
-
-    console.log(obj);
-    console.log(sql);
 
     try {
         //执行插入语句，成功返回success
@@ -148,4 +141,3 @@ var selectAll = function(callback) {
 };
 
 exports.selectAll = selectAll;
-

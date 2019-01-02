@@ -8,6 +8,8 @@
 
 https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
+如果是 macOS，可以不用 git。
+
 ## [node@8.14.0](http://nodejs.cn/download/)
 
 下载电脑系统对应的，win/linux/macOS 等
@@ -21,6 +23,8 @@ https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 如果输出包含 `v...` 版本号，代表安装成功。
 
 如果报 `node` 不存在之类的，可能是没有把 `node` 加入到 path 的系统变量中。需要添加 path 的系统变量。
+
+如果是 macOS，可以通过 brew/wget/curl 来下载。
 
 ## [mysql@8.0.13](https://dev.mysql.com/downloads/mysql/)
 
@@ -61,9 +65,11 @@ innodb_file_per_table = 1
 default_authentication_plugin = mysql_native_password
 
 [mysqld_safe]
-timezone = '+0:00'
+timezone = '|0:00'
 log-error = /usr/local/var/log/mysql/error.log
 ```
+
+如果是 macOS，可以通过 brew/wget/curl 来下载。
 
 ## 设置 `mysql` 的密码 【这里很重要，因为只能执行一次】
 
@@ -255,3 +261,178 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
 ## 体验完毕，如果需要关闭 mysql
 
 在 `git` 命令行工具中输入 `mysqladmin -u root -p shutdown` 或 `winpty mysqladmin -u root -p shutdown`
+
+记住，如果关闭 mysql，下次想要连接必须先启动 mysql
+
+## 导出/备份数据库
+
+在 `git` 命令行工具中输入 `mysqldump -u root -p BOOK > backup/book.sql` 或 `winpty mysqldump -u root -p BOOK > backup/book.sql`
+
+## 其他 mysql 命令
+
+``` bash
+# 查看当前数据库所有表格
+show tables;
+
+# 删除 test 数据库
+drop database TEST;
+```
+
+# 数据表单、数据结构设计
+
+mysql 数据库中创建了 4 个表格，t_admin、t_student、t_type、t_book。
+
+我们逐个分析。
+
+## t_admin
+
+| Admin_id | Admin_name | Admin_password                   | Admin_type |
+|----------|------------|----------------------------------|------------|
+|        1 | root       | 63a9f0ea7bb98050796b649e85481845 | 1          |
+|        2 | admin      | 21232f297a57a5a743894a0e4a801fc3 | 1          |
+|        3 | book1      | 65d8db90b8b4efbc55b1a062c58f2fc1 | 2          |
+|        4 | book2      | 745c723e03084d27553fb9d4037b08c1 | 2          |
+|        5 | read1      | 108749512d78aa131a8eeb8d1c067ba3 | 3          |
+|        6 | read2      | d40e0f3dfb94d7877f6ad4450ccdb3ed | 3          |
+
+如上表所示，是 t_admin 的初始化数据。
+
+t_admin 是个数组，每个元素是个对象，包含 4 个属性。
+
+Admin_id 是用户 id，是唯一的可标识符，可以用来查询用户。数据类型是 int。
+
+Admin_name 是用户名称。数据类型是 varchar。
+
+Admin_password 是用户密码。数据类型是 varchar。涉及隐私，前端传入用 md5 加密。
+
+Admin_type 是用户类别/权限。数据类型是 varchar，可选1系统管理员、2图书管理员、3读者。
+
+## t_student
+
+| Student_id | Student_name | Student_password                 | Student_type | Book_num | Borrow_date | Return_date |
+|------------|--------------|----------------------------------|--------------|----------|-------------|-------------|
+|          5 | read1        | 108749512d78aa131a8eeb8d1c067ba3 | 3            |          | 0000-00-00  | 0000-00-00  |
+|          6 | read2        | d40e0f3dfb94d7877f6ad4450ccdb3ed | 3            |          | 0000-00-00  | 0000-00-00  |
+
+如上表所示，是 t_student 的初始化数据。
+
+t_student 是个数组，每个元素是个对象，包含 7 个属性。前 4 个属性与 t_admin 一样，只是换了名字。
+
+Book_num 是用户借的书 id，是唯一的可标识符，可以用来查询用户。数据类型是 int。
+
+Borrow_date 是用户借书时间。数据类型是日期和时间类型。
+
+Return_date 是用户还书时间。数据类型是日期和时间类型。
+
+本程序，t_student 目前系统未被使用。因为目前系统只支持用户借书，不支持用户还书。后期如果需要实现该功能，可以将 t_student 取为 t_admin 中 tye 为 3 的集合。
+
+## t_type
+
+| Sort_id | Sort_name     |
+|---------|---------------|
+|       1 | JavaScript    |
+|       2 | Java          |
+|       3 | C             |
+|       4 | 文学          |
+|       5 | 数据库        |
+|       6 | 建筑          |
+|       7 | 经济          |
+|       8 | 医学          |
+|       9 | 摄影          |
+|      10 | 字典词典      |
+|      11 | 政治/军事     |
+|      12 | 儿童文本      |
+|      13 | 科普          |
+|      14 | 杂志/期刊     |
+|      15 | 悬疑          |
+|      16 | 都市          |
+
+如上表所示，是 t_type 的初始化数据。
+
+t_type 是个数组，每个元素是个对象，包含 2 个属性。
+
+Sort_id 是分类 id，是唯一的可标识符，可以用来查询分类。数据类型是 int。
+
+Sort_name 是分类名称。数据类型是 varchar。
+
+## t_book
+
+| Book_num | Book_name | Sort_id | Price  | Pub_company | Pub_date | Total_num | Current_num | Buy_date | Brief |
+
+数据过多，这里就不展示了。
+
+Book_num 是书籍 id，是唯一的可标识符，可以用来查询分类。数据类型是 int。
+
+Book_name 是书籍名称。数据类型是 varchar。
+
+Sort_id 是书籍分类。数据类型是 int。
+
+Price 是书籍价格。数据类型是 decimal。
+
+Pub_company 是出版社。数据类型是 varchar。
+
+Pub_date 是出版时间。数据类型是 date。
+
+Total_num 是书籍总数。数据类型是 int。
+
+Current_num 是书籍当前数量（剩余）。数据类型是 int。
+
+Buy_date 是书籍购买时间，暂未显示。数据类型是 date。
+
+Brief 是书籍简介。数据类型是 text。
+
+# 操作页面
+
+根据不同人员：系统管理员、图书管理员、读者，这三种人员，有不同操作/页面，把每个操作/页面使用一遍，并且截图。
+
+系统管理员：目前有两个账户，root 和 admin。密码同账户。
+  * 查看书籍，借阅
+  * 添加分类
+  * 查看分类
+  * 添加书籍
+  * 查看书籍，编辑
+  * 添加用户，系统管理员、图书管理员、读者
+  * 修改用户密码
+
+图书管理员：目前有两个账户，book1 和 book2。密码同账户。
+  * 查看书籍，借阅
+  * 添加分类
+  * 查看分类
+  * 添加书籍
+  * 查看书籍，编辑
+
+读者：目前有两个账户，read1 和 read2。密码同账户。
+  * 查看书籍，借阅
+
+# 遇到的问题及解决方法
+
+环境安装是个大问题
+
+mysql 怎么配置
+
+node 怎么连接 mysql 是个大问题
+
+node 怎么操作 mysql，增删改查
+
+使用 NodeJS+ExpressJS+AngularJS+MySQL 开发的图书管理系统。开发前后端模块，前端用AngularJS，样式用Bootstrap，后台用NodeJS+ExpressJS搭建服务器。自己封装了数据库连接池的接口，利用Java项目MVC的思想组织后台，用Ajax传递前后台数据。
+
+* ExpressJS用到了: body-parser,cookie-parser,express-session,ejs,MD5加密等模块
+* AngularJS用到了: ng-grid,ui-router,ng-file-upload等模块
+* 核心是用 NodeJS 连接 mysql，封装了数据库连接池的接口
+* 用Ajax调用接口，修改 mysql 的数据
+
+使用 node 启动 app.js 入口文件，node 会用 express 跑一个本地服务，构建前端页面。用户在访问页面的时候，获取数据或者进行操作，都是通过 ajax 来访问数据库连接池的接口 （node 连接 mysql）。
+
+[node 教程](http://www.runoob.com/nodejs/nodejs-tutorial.html)
+
+[express-4 教程](http://www.runoob.com/w3cnote/express-4-x-api.html)
+
+[angularjs 教程](http://www.runoob.com/angularjs/angularjs-tutorial.html)
+
+[mysql 教程](http://www.runoob.com/mysql/mysql-tutorial.html)
+
+# 更多
+
+查看 app/README.md
+
+查看 test/README.md
