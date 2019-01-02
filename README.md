@@ -1,6 +1,6 @@
 # 安装环境
 
-## [git](https://git-scm.com/)
+## git: https://git-scm.com/
 
 在当前文件打开 `git` 命令行工具：
 
@@ -10,7 +10,7 @@ https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
 如果是 macOS，可以不用 git。
 
-## [node@8.14.0](http://nodejs.cn/download/)
+## node@8.14.0: http://nodejs.cn/download/
 
 下载电脑系统对应的，win/linux/macOS 等
 
@@ -26,7 +26,7 @@ https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
 如果是 macOS，可以通过 brew/wget/curl 来下载。
 
-## [mysql@8.0.13](https://dev.mysql.com/downloads/mysql/)
+## mysql@8.0.13: https://dev.mysql.com/downloads/mysql/
 
 下载电脑系统对应的，win/linux/macOS 等
 
