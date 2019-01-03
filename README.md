@@ -8,9 +8,11 @@
 
 https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
-如果是 macOS，可以不用 git。
+如果是 macOS，可以不用 git。直接使用终端！
 
-## node@8.14.0: http://nodejs.cn/download/
+下方如果出现 `git` 命令行工具，在 macOS 中则是终端！
+
+## node: http://nodejs.cn/download/
 
 下载电脑系统对应的，win/linux/macOS 等
 
@@ -24,9 +26,13 @@ https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
 如果报 `node` 不存在之类的，可能是没有把 `node` 加入到 path 的系统变量中。需要添加 path 的系统变量。
 
-如果是 macOS，可以通过 brew/wget/curl 来下载。
+如果是 macOS，可以通过 brew 来下载。
 
-## mysql@8.0.13: https://dev.mysql.com/downloads/mysql/
+``` bash
+brew install node
+```
+
+## mysql: https://dev.mysql.com/downloads/mysql/
 
 下载电脑系统对应的，win/linux/macOS 等
 
@@ -36,7 +42,7 @@ https://blog.csdn.net/csdnliuxin123524/article/details/76183686
 
 保险期间！在 `mysql所在的文件中/bin` 文件下打开 `git`，在 `git` 命令行工具中输入 `mysql -V` 或者 `winpty mysql -V`
 
-如果输出包含 `v8.0.13` 代表安装成功。
+如果输出包含 `v...` 代表安装成功。
 
 如果安装或者启动还有问题，可以参考：
 
@@ -69,7 +75,11 @@ timezone = '|0:00'
 log-error = /usr/local/var/log/mysql/error.log
 ```
 
-如果是 macOS，可以通过 brew/wget/curl 来下载。
+如果是 macOS，可以通过 brew 来下载。
+
+``` bash
+brew install mysql
+```
 
 ## 设置 `mysql` 的密码 【这里很重要，因为只能执行一次】
 
@@ -110,13 +120,13 @@ Reloading privilege tables..
 在 `git` 命令行工具中输入，有下面三种方式可以尝试：
 
 ``` bash
-# 查看 3306 端口是否占用
+# windows 查看 3306 端口是否占用
 netstat -an|find "3306"
 
-# 查看 3306 端口是否占用
+# macOS 查看 3306 端口是否占用
 lsof -i:3306
 
-# 查看 mysqld
+# macOS 查看 mysqld
 ps -ef | grep mysqld
 ```
 
